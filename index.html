@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#d5ecdc">
 <title>Find Your Stay</title>
+<script>
+if (matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+  document.documentElement.classList.add('entrance-pending');
+  window.__entranceFallback = setTimeout(() => {
+    document.documentElement.classList.remove('entrance-pending');
+  }, 3200);
+}
+</script>
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>

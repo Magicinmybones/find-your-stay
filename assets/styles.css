@@ -430,3 +430,17 @@ img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
   .stat:nth-child(2) b{padding-top:18.5px}
   .stat small{font-size:clamp(13.5px, 3.9vw, 15px)}
 }
+
+/* Opening composition only. JavaScript removes the class at completion. */
+@media (prefers-reduced-motion:no-preference){
+  html.entrance-pending .logo,
+  html.entrance-pending .actions,
+  html.entrance-pending .deck .card{opacity:0}
+}
+@media (prefers-reduced-motion:no-preference) and (min-width:700px){
+  html.entrance-pending .nav,
+  html.entrance-pending .h1 span,
+  html.entrance-pending .lede,
+  html.entrance-pending .search,
+  html.entrance-pending .stats{opacity:0}
+}
