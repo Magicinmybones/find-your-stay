@@ -1,0 +1,15 @@
+# Local and generated files
+node_modules/
+.wrangler/
+dist/
+.cache/
+.idea/
+.vscode/
+.dev.vars*
+.env*
+!.env.example
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak

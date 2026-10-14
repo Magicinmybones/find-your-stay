@@ -1,0 +1,432 @@
+@font-face{font-family:"Young Serif";font-style:normal;font-weight:400;font-display:block;src:url(fonts/young-serif.woff2) format("woff2")}
+@font-face{font-family:"Inter";font-style:normal;font-weight:100 900;font-display:block;src:url(fonts/inter.woff2) format("woff2")}
+
+/* =====================================================================
+   TOKENS — sampled from the 1414 × 1001 reference
+   ===================================================================== */
+:root{
+  color-scheme:light;
+  --mint:#d5ecdc;   --cream:#fefaef;  --navy:#0a2737;  --ink:#0a2330;
+  --on-navy:#f2fcfd; --chip:#fffbf0; --pill:#eeebe4;  --line:#cdcbbf;
+  --pink:#fecfef;   --sky:#cde0dc;    --sage:#e5e9c6;
+  --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --serif:"Young Serif",ui-serif,Georgia,serif;
+
+  --vh:100vh;  --vh:100svh;
+
+  /* ---------------------------------------------------------------
+     SCALE MODEL
+     --u  = one artboard pixel in screen pixels.
+     The artboard is 1414 × 1001. --u is the smaller of the two axis
+     ratios, so the whole composition is always visible; the other
+     axis gets the slack and the layout absorbs it instead of showing
+     empty letterbox bars:
+       • extra width  → the composition stays at artboard proportions,
+                        centred; mint band and cream ground run full-bleed
+       • extra height → --ex (the vertical slack) is shared out: the
+                        header stays pinned to the top, the deck and
+                        stats stay pinned to the bottom, the hero
+                        floats in between and the mint band stretches
+                        with the deck — no empty strip top or bottom
+     On very short landscape screens (phones on their side) --u is
+     floored so text stays legible, and the page simply scrolls.
+     --------------------------------------------------------------- */
+  --u0:min(calc(100vw / 1414), max(calc(var(--vh) / 1001), .55px));
+  --u:var(--u0);
+  --ex:max(0px, calc(var(--vh) - 1001 * var(--u0)));
+  --page-h:max(var(--vh), calc(1001 * var(--u0)));
+  --frame-w:min(100%, calc(1414 * var(--u0)));   /* composition stays together; bands run full-bleed */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{min-height:100%;background:var(--cream)}
+body{
+  color:var(--ink);font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  text-rendering:geometricPrecision;
+}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit;color:inherit;border:0;background:none;outline:none;-webkit-appearance:none;appearance:none}
+input[type=search]::-webkit-search-decoration,input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
+img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
+:focus-visible{outline:2px solid var(--navy);outline-offset:3px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+
+/* =====================================================================
+   PAGE SHELL
+   ===================================================================== */
+.page{
+  position:relative;width:100%;
+  height:var(--page-h);
+  overflow:hidden;isolation:isolate;
+  background:var(--cream);
+}
+.band{                                   /* mint top band, full bleed */
+  position:absolute;left:0;right:0;top:0;z-index:-1;
+  height:calc(229 * var(--u) + var(--ex) * .75);
+  background:var(--mint);
+}
+.frame{                                  /* positioning context */
+  position:absolute;top:0;bottom:0;left:50%;
+  width:var(--frame-w);
+  transform:translateX(-50%);
+}
+
+/* ---------------- header ---------------- */
+.logo{
+  position:absolute;left:calc(48 * var(--u));top:calc(18 * var(--u));
+  width:calc(47 * var(--u));height:calc(46 * var(--u));
+}
+.logo svg{display:block;width:100%;height:100%}
+.nav{
+  position:absolute;top:calc(16 * var(--u));
+  left:calc(50% + 1.5 * var(--u));transform:translateX(-50%);
+  width:calc(324 * var(--u));height:calc(51 * var(--u));
+  border-radius:calc(25.5 * var(--u));
+  background:var(--navy);color:var(--on-navy);
+  display:flex;align-items:center;justify-content:center;
+  gap:calc(20.6 * var(--u));
+  font-size:calc(15.8 * var(--u));font-weight:500;line-height:1;
+  letter-spacing:calc(-.05 * var(--u));
+}
+.nav a{position:relative;top:calc(-.5 * var(--u));transition:opacity .2s}
+.nav a:hover{opacity:.72}
+.actions{
+  position:absolute;top:calc(16 * var(--u));right:calc(44 * var(--u));
+  display:flex;gap:calc(8 * var(--u));
+}
+.icon-btn{
+  width:calc(51 * var(--u));height:calc(51 * var(--u));
+  border-radius:50%;background:var(--chip);
+  display:grid;place-items:center;cursor:pointer;
+  transition:transform .2s;
+}
+.icon-btn:hover{transform:translateY(-1px)}
+.icon-btn svg{display:block;width:100%;height:100%}
+
+/* ---------------- hero ---------------- */
+.hero{position:absolute;left:calc(50 * var(--u));top:calc(330 * var(--u) + var(--ex) * .55)}
+.h1{font-weight:400;color:var(--ink)}
+.h1 span{position:absolute;left:0;display:block;white-space:nowrap;line-height:1}
+.h1 .l1,.h1 .l3{
+  font-family:var(--sans);
+  font-size:calc(64 * var(--u));
+  letter-spacing:calc(.5 * var(--u));
+}
+.h1 .l1{top:calc(12 * var(--u))}
+.h1 .l2{
+  top:calc(95 * var(--u));left:calc(-2 * var(--u));
+  font-family:var(--serif);
+  font-size:calc(60 * var(--u));
+  letter-spacing:calc(-3.1 * var(--u));
+  -webkit-text-stroke:calc(.45 * var(--u)) currentColor;
+}
+.h1 .l3{top:calc(160 * var(--u))}
+.lede{
+  position:absolute;left:calc(-1 * var(--u));top:calc(245 * var(--u));
+  width:calc(420 * var(--u));
+  font-size:calc(20 * var(--u));font-weight:450;
+  line-height:calc(24 * var(--u));letter-spacing:calc(-.12 * var(--u));
+}
+.search{
+  position:absolute;left:calc(-1 * var(--u));top:calc(333 * var(--u));
+  width:calc(391 * var(--u));height:calc(61 * var(--u));
+  border-radius:calc(30.5 * var(--u));
+  background:var(--pill);
+}
+.search .go{
+  position:absolute;left:calc(7 * var(--u));top:calc(7 * var(--u));
+  width:calc(47 * var(--u));height:calc(47 * var(--u));
+  border-radius:50%;background:var(--navy);cursor:pointer;
+  display:grid;place-items:center;
+}
+.search .go svg{display:block;width:100%;height:100%}
+.search input{
+  position:absolute;left:calc(67 * var(--u));top:calc(-1 * var(--u));
+  width:calc(300 * var(--u));height:100%;
+  font-size:calc(16 * var(--u));font-weight:450;
+  letter-spacing:calc(-.3 * var(--u));
+}
+.search input::placeholder{color:var(--ink);opacity:1}
+
+/* ---------------- stats ---------------- */
+.stats{
+  position:absolute;left:calc(49 * var(--u));top:calc(862 * var(--u) + var(--ex));
+  width:calc(478 * var(--u));height:calc(94 * var(--u));
+  border:max(1px, calc(1 * var(--u))) solid var(--line);
+  border-radius:calc(22 * var(--u));
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+}
+.stat{position:relative;text-align:center}
+.stat + .stat::before{
+  content:"";position:absolute;left:calc(-.5 * var(--u));
+  top:calc(21 * var(--u));height:calc(49 * var(--u));
+  width:max(1px, calc(1 * var(--u)));background:var(--line);
+}
+.stat b{
+  display:block;font-weight:500;line-height:1;
+  font-size:calc(33 * var(--u));letter-spacing:calc(-1 * var(--u));
+  padding-top:calc(18 * var(--u));
+}
+.stat:nth-child(2) b{padding-top:calc(20 * var(--u))}
+.stat small{
+  display:block;font-weight:450;line-height:1;
+  font-size:calc(16 * var(--u));margin-top:calc(8 * var(--u));
+}
+.stars{display:flex;justify-content:center;gap:calc(.8 * var(--u));margin-top:calc(13 * var(--u))}
+.stars svg{display:block;width:calc(11.6 * var(--u));height:calc(11.6 * var(--u))}
+
+/* ---------------- listing deck ----------------
+   The deck box maps artboard x 700→1414, y 0→1001.
+   All card geometry below is measured from the reference.            */
+.deck{
+  position:absolute;right:0;top:var(--ex);
+  width:calc(714 * var(--u));height:calc(1001 * var(--u));
+}
+.card{
+  position:absolute;
+  width:calc(403 * var(--u));height:calc(524 * var(--u));
+  border-radius:calc(40 * var(--u));
+  overflow:hidden;isolation:isolate;
+  transform-origin:50% 50%;
+  transition:translate .35s cubic-bezier(.2,.7,.2,1);
+}
+.card .media{
+  position:absolute;z-index:0;pointer-events:none;height:auto;
+  mix-blend-mode:luminosity;          /* photo takes the card's hue */
+}
+.card h3{
+  position:absolute;z-index:1;left:calc(20 * var(--u));top:calc(21 * var(--u));
+  font-family:var(--serif);font-weight:400;white-space:nowrap;
+  font-size:calc(23 * var(--u));line-height:calc(26 * var(--u));
+  letter-spacing:calc(-.8 * var(--u));
+  -webkit-text-stroke:calc(.08 * var(--u)) currentColor;
+}
+.card h3 .dash{font-family:var(--sans);font-weight:500;-webkit-text-stroke:0;display:inline-block;margin-left:calc(3.5 * var(--u))}
+.card p{
+  position:absolute;z-index:1;left:calc(20 * var(--u));
+  font-size:calc(16 * var(--u));font-weight:450;line-height:1;
+  letter-spacing:calc(-.3 * var(--u));
+}
+.card .price{top:calc(81 * var(--u))}
+.card .loc{top:calc(108 * var(--u))}
+.card .open{
+  position:absolute;z-index:2;left:calc(301 * var(--u));top:calc(20 * var(--u));
+  width:calc(81 * var(--u));height:calc(81 * var(--u));
+  border-radius:50%;background:var(--navy);
+  display:grid;place-items:center;
+  transition:transform .25s;
+}
+.card .open:hover{transform:rotate(45deg)}
+.card .open svg{display:block;width:100%;height:100%}
+
+.card.pink{
+  background:var(--pink);width:calc(401 * var(--u));
+  left:calc(210.5 * var(--u));top:calc(173.1 * var(--u));
+  transform:rotate(15.48deg);
+}
+.card.pink h3,.card.pink p{translate:calc(-.8 * var(--u)) calc(-.8 * var(--u))}
+.card.pink .open{translate:calc(-.8 * var(--u)) calc(-.4 * var(--u))}
+.card.pink .media{left:calc(40 * var(--u));top:calc(190 * var(--u));width:calc(300 * var(--u))}
+
+.card.sky{
+  background:var(--sky);width:calc(401 * var(--u));
+  left:calc(118.5 * var(--u));top:calc(332.6 * var(--u));
+  transform:rotate(-12.5deg);
+}
+.card.sky h3,.card.sky p{translate:calc(-.9 * var(--u)) calc(-.4 * var(--u))}
+.card.sky .open{translate:calc(-1.6 * var(--u)) calc(-1.5 * var(--u))}
+.card.sky .media{
+  left:calc(38.66 * var(--u));top:calc(167.25 * var(--u));width:calc(248.1 * var(--u));
+  transform-origin:0 0;transform:rotate(.73deg);
+  filter:brightness(1.09) contrast(.885);
+}
+
+.card.sage{background:var(--sage);left:calc(266 * var(--u));top:calc(432 * var(--u))}
+.card.sage .media{
+  left:calc(36 * var(--u));top:calc(180 * var(--u));width:calc(312.5 * var(--u));
+  filter:brightness(1.075) contrast(1.066);
+}
+
+@media (hover:hover){
+  .deck:hover .card.pink{translate:calc(6 * var(--u)) calc(-8 * var(--u))}
+  .deck:hover .card.sky{translate:calc(-6 * var(--u)) calc(-4 * var(--u))}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* =====================================================================
+   RESPONSIVE ARCHITECTURE
+   ---------------------------------------------------------------------
+   Desktop (above) is a proportional stage. It never collides — it only
+   gets smaller — so its real failure point is legibility: measured, the
+   smallest copy (nav, prices, stat labels = 16 artboard px) drops below
+   12 px once the viewport is narrower than ~1060 px (u < .75). Near-square
+   and portrait viewports also break it (the stage would float in a tall
+   mint band). Those two conditions hand over to the tablet architecture.
+
+   TABLET  (≤1059 px wide, or aspect < 23:20)
+     · real-pixel components: header, search and stats at their exact
+       desktop size (--u = 1px), so they are literally the same parts
+     · landscape  → two columns, desktop-like: copy left, card deck right
+     · portrait   → header / deck breaking out of the mint band / copy /
+                    search + stats sharing one row
+   MOBILE  (<700 px portrait, <660 px landscape) — measured: below this the
+     portrait deck's cards drop under ~240 px and the nav pill no longer
+     fits comfortably beside logo + actions.
+     · header becomes logo + actions + menu button; nav links move into
+       a navy panel built from the nav pill's own surface
+     · deck becomes a vertical stack that shows each card's header
+   Card text is sized independently of card geometry (--t, --tp) so the
+   cards can shrink without their copy becoming unreadable.
+   ===================================================================== */
+.burger{display:none}
+.burger .i-close{display:none}
+.burger[aria-expanded="true"] .i-open{display:none}
+.burger[aria-expanded="true"] .i-close{display:inline}
+
+@media (max-width:1059.98px), (max-aspect-ratio:23/20){
+  :root{
+    --u:1px;                                   /* components at true size */
+    --gut:clamp(20px, 4.5vw, 48px);
+    --hdr:87px;                                /* 16 top + 51 header + 20 */
+    --hs:clamp(40px, 7.9vw, max(64px, 5.2svh)); /* "Find Your Stay" size  */
+    --lede:clamp(17px, 2.5vw, max(20px, 1.6svh));
+    --hero-h:calc(var(--hs) * 3.64 + var(--lede) * 2.4 + 113.5px);
+    /* portrait deck: wide fan, box 1073 × 760 card-units */
+    --du:max(.5px, min(calc((100vw - 2 * var(--gut)) / 1073),
+                       calc((var(--vh) - var(--hdr) - 56px - var(--hero-h)) / 760)));
+    --deck-w:1073; --deck-h:760; --band-cut:118;
+  }
+  body{overflow-x:visible}
+  .page{height:auto;min-height:var(--vh);overflow:visible}
+  .band{height:calc(var(--hdr) + var(--band-cut) * var(--du))}
+
+  .frame{
+    position:relative;left:auto;top:auto;bottom:auto;transform:none;
+    width:100%;min-height:var(--vh);
+    padding:16px var(--gut) 28px;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-rows:51px auto minmax(min-content,1fr);
+    grid-template-areas:"hdr hdr" "deck deck" "copy copy";
+    row-gap:20px;
+  }
+  /* header: same three components, true size, one row */
+  .logo,.nav,.actions{position:relative;left:auto;right:auto;top:auto;transform:none;grid-area:hdr;align-self:center}
+  .logo{justify-self:start}
+  .nav{justify-self:center}
+  .actions{justify-self:end}
+
+  /* deck */
+  .deck{
+    --u:var(--du);
+    --t:min(max(var(--u), .8px), calc(var(--u) * 1.24));   /* titles  */
+    --tp:max(var(--u), .8px);                               /* small copy */
+    grid-area:deck;justify-self:center;
+    position:relative;right:auto;top:auto;
+    width:calc(var(--deck-w) * var(--u));height:calc(var(--deck-h) * var(--u));
+  }
+  .card h3{font-size:calc(23 * var(--t));line-height:calc(26 * var(--t));letter-spacing:calc(-.8 * var(--t));-webkit-text-stroke:calc(.08 * var(--t)) currentColor}
+  .card p{font-size:calc(16 * var(--tp));letter-spacing:calc(-.3 * var(--tp))}
+  .card .price{top:calc(21 * var(--u) + 60 * var(--t))}
+  .card .loc{top:calc(21 * var(--u) + 60 * var(--t) + 27 * var(--tp))}
+  .card.pink{left:calc(335 * var(--u));top:calc(18 * var(--u))}
+  .card.sky {left:calc(28 * var(--u)); top:calc(206 * var(--u))}
+  .card.sage{left:calc(642 * var(--u));top:calc(230 * var(--u))}
+
+  /* copy block: heading, lede, search — flows; stats shares the last row */
+  .hero{
+    grid-area:copy;position:relative;left:auto;top:auto;
+    display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
+    padding-bottom:16.5px;                    /* centres search on stats */
+  }
+  .h1 span{position:static}
+  .h1 .l1,.h1 .l3{font-size:var(--hs);letter-spacing:.0078em}
+  .h1 .l2{font-size:calc(var(--hs) * .9375);letter-spacing:-.0517em;-webkit-text-stroke:.0075em currentColor;margin:calc(var(--hs) * .297) 0 0 -.033em}
+  .h1 .l3{margin-top:calc(var(--hs) * .078)}
+  .lede{position:static;margin-top:calc(var(--hs) * .33);font-size:var(--lede);line-height:1.2;letter-spacing:-.006em;width:auto;max-width:21em}
+  .search{position:relative;left:auto;top:auto;margin-top:36px;width:min(391px, calc(100% - var(--stats-w, 0px) - 24px));flex:none}
+  .stats{
+    --stats-w:min(336px, 46%);
+    grid-area:copy;justify-self:end;align-self:end;
+    position:relative;left:auto;top:auto;
+    width:var(--stats-w);
+  }
+  .hero{--stats-w:min(336px, 46%)}
+}
+
+/* ---- tablet, landscape: the desktop two-column idea at true size ---- */
+@media (max-width:1059.98px) and (min-aspect-ratio:23/20) and (min-width:660px){
+  :root{
+    --du:max(.55px, min(calc((var(--vh) - var(--hdr) - 24px) / 826),
+                        calc((100vw - 2 * var(--gut) - 432px) / 608)));
+    --deck-w:608; --deck-h:826; --band-cut:100;
+    --hs:min(64px, calc((100vw - 2 * var(--gut) - 608 * var(--du) - 32px) / 9.4));
+  }
+  .frame{
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-rows:51px auto auto 1fr;
+    grid-template-areas:"hdr hdr" "copy deck" "stats deck" ". deck";
+    column-gap:32px;row-gap:0;padding-bottom:24px;
+  }
+  .logo,.nav,.actions{margin-bottom:20px}
+  .deck{align-self:start}
+  .card.pink{left:calc(144.5 * var(--u));top:calc(44.1 * var(--u))}
+  .card.sky {left:calc(52.5 * var(--u)); top:calc(203.6 * var(--u))}
+  .card.sage{left:calc(200 * var(--u));  top:calc(303 * var(--u))}
+  .hero{padding-bottom:0;--stats-w:0px;margin-top:calc(var(--band-cut) * var(--du) + 28px)}  /* copy starts on cream, as on desktop */
+  .lede,.search{max-width:100%}
+  .stats{grid-area:stats;align-self:start;justify-self:start;width:min(478px, 100%);margin-top:32px}
+}
+
+/* ---- mobile ---- */
+@media (max-width:659.98px), (max-width:699.98px) and (max-aspect-ratio:23/20){
+  :root{
+    --gut:clamp(16px, 5.2vw, 28px);
+    --hdr:80px;                               /* 16 + 46 + 18 */
+    --hs:min(48px, calc((100vw - 2 * var(--gut)) / 9.45));
+    --lede:clamp(15.5px, 4.3vw, 18px);
+    --du:min(.8px, calc((100vw - 2 * var(--gut)) / 480));
+    --deck-w:480; --deck-h:900; --band-cut:104;
+  }
+  .frame{grid-template-rows:46px auto auto auto;grid-template-areas:"hdr hdr" "deck deck" "copy copy" "stats stats";row-gap:18px;padding-bottom:max(24px, env(safe-area-inset-bottom))}
+  .icon-btn{width:46px;height:46px}
+  .burger{display:grid}
+  .logo{width:42px;height:41px}
+
+  /* nav pill → navy dropdown panel (same surface, same type) */
+  .nav{
+    position:absolute;z-index:20;grid-area:auto;justify-self:stretch;align-self:start;
+    top:calc(16px + 46px + 10px);left:var(--gut);right:var(--gut);
+    width:auto;height:auto;padding:8px;border-radius:26px;
+    flex-direction:column;align-items:stretch;gap:2px;
+    font-size:17px;letter-spacing:-.01em;
+    box-shadow:0 18px 40px -18px rgba(10,39,55,.45);
+    opacity:0;visibility:hidden;transform:translateY(-8px);
+    transition:opacity .22s ease, transform .22s ease, visibility 0s .22s;
+  }
+  .nav a{top:0;padding:15px 18px;border-radius:18px}
+  .nav a:hover,.nav a:focus-visible{background:rgba(242,252,253,.08);opacity:1;outline-offset:-2px}
+  .page.nav-open .nav{opacity:1;visibility:visible;transform:none;transition:opacity .22s ease, transform .22s ease}
+
+  /* vertical deck: each card's header stays readable */
+  .deck{justify-self:center}
+  .card.pink{left:calc(52 * var(--u)); top:calc(26 * var(--u)); transform:rotate(8deg)}
+  .card.sky {left:calc(22 * var(--u)); top:calc(196 * var(--u));transform:rotate(-7deg)}
+  .card.sage{left:calc(46 * var(--u)); top:calc(372 * var(--u))}
+
+  .hero{padding-bottom:0;--stats-w:0px}
+  .lede{max-width:22em}
+  .search{width:100%;max-width:440px;height:56px;margin-top:28px}
+  .search .go{left:6px;top:6px;width:44px;height:44px}
+  .search input{left:62px;width:calc(100% - 74px);font-size:16px}
+  .search input::placeholder{font-size:min(16px, calc((100vw - 2 * var(--gut) - 74px) / 14.4))}
+  .stats{
+    --stats-w:auto;grid-area:stats;justify-self:stretch;align-self:start;
+    width:auto;max-width:440px;height:88px;margin-top:6px;
+  }
+  .stat + .stat::before{top:19px;height:48px}
+  .stat b{font-size:clamp(26px, 8vw, 31px);padding-top:17px}
+  .stat:nth-child(2) b{padding-top:18.5px}
+  .stat small{font-size:clamp(13.5px, 3.9vw, 15px)}
+}
